@@ -1,11 +1,11 @@
-export const OPENSPEC_DIR_NAME = 'openspec';
+export const FLOW_STUDIO_DIR_NAME = 'flow-studio';
 
-export const OPENSPEC_MARKERS = {
-  start: '<!-- OPENSPEC:START -->',
-  end: '<!-- OPENSPEC:END -->'
+export const FLOW_STUDIO_MARKERS = {
+  start: '<!-- FLOW_STUDIO:START -->',
+  end: '<!-- FLOW_STUDIO:END -->'
 };
 
-export interface OpenSpecConfig {
+export interface FlowStudioConfig {
   aiTools: string[];
 }
 

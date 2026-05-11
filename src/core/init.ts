@@ -1,7 +1,7 @@
 /**
  * Init Command
  *
- * Sets up OpenSpec with Agent Skills and /opsx:* slash commands.
+ * Sets up Flow Studio with Agent Skills and /fwst:* slash commands.
  * This is the unified setup command that replaces both the old init and experimental commands.
  */
 
@@ -14,7 +14,7 @@ import { FileSystemUtils } from '../utils/file-system.js';
 import { transformToHyphenCommands } from '../utils/command-references.js';
 import {
   AI_TOOLS,
-  OPENSPEC_DIR_NAME,
+  FLOW_STUDIO_DIR_NAME,
   AIToolOption,
 } from './config.js';
 import { PALETTE } from './styles/palette.js';
@@ -47,7 +47,7 @@ import { getAvailableTools } from './available-tools.js';
 import { migrateIfNeeded } from './migration.js';
 
 const require = createRequire(import.meta.url);
-const { version: OPENSPEC_VERSION } = require('../../package.json');
+const { version: FLOW_STUDIO_VERSION } = require('../../package.json');
 
 // -----------------------------------------------------------------------------
 // Constants
@@ -61,17 +61,17 @@ const PROGRESS_SPINNER = {
 };
 
 const WORKFLOW_TO_SKILL_DIR: Record<string, string> = {
-  'explore': 'openspec-explore',
-  'new': 'openspec-new-change',
-  'continue': 'openspec-continue-change',
-  'apply': 'openspec-apply-change',
-  'ff': 'openspec-ff-change',
-  'sync': 'openspec-sync-specs',
-  'archive': 'openspec-archive-change',
-  'bulk-archive': 'openspec-bulk-archive-change',
-  'verify': 'openspec-verify-change',
-  'onboard': 'openspec-onboard',
-  'propose': 'openspec-propose',
+  'explore': 'flow-studio-explore',
+  'new': 'flow-studio-new-change',
+  'continue': 'flow-studio-continue-change',
+  'apply': 'flow-studio-apply-change',
+  'ff': 'flow-studio-ff-change',
+  'sync': 'flow-studio-sync-specs',
+  'archive': 'flow-studio-archive-change',
+  'bulk-archive': 'flow-studio-bulk-archive-change',
+  'verify': 'flow-studio-verify-change',
+  'onboard': 'flow-studio-onboard',
+  'propose': 'flow-studio-propose',
 };
 
 // -----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ export class InitCommand {
 
   async execute(targetPath: string): Promise<void> {
     const projectPath = path.resolve(targetPath);
-    const openspecDir = OPENSPEC_DIR_NAME;
+    const openspecDir = FLOW_STUDIO_DIR_NAME;
     const openspecPath = path.join(projectPath, openspecDir);
 
     // Validation happens silently in the background
@@ -210,7 +210,7 @@ export class InitCommand {
 
     if (this.force || !canPrompt) {
       // --force flag or non-interactive mode: proceed with cleanup automatically.
-      // Legacy slash commands are 100% OpenSpec-managed, and config file cleanup
+      // Legacy slash commands are 100% Flow Studio-managed, and config file cleanup
       // only removes markers (never deletes files), so auto-cleanup is safe.
       await this.performLegacyCleanup(projectPath, detection);
       return;
@@ -323,7 +323,7 @@ export class InitCommand {
       .map((toolId) => AI_TOOLS.find((t) => t.value === toolId)?.name || toolId);
 
     if (configuredNames.length > 0) {
-      console.log(`OpenSpec configured: ${configuredNames.join(', ')} (pre-selected)`);
+      console.log(`Flow Studio configured: ${configuredNames.join(', ')} (pre-selected)`);
     }
 
     const detectedOnlyNames = detectedTools
@@ -468,7 +468,7 @@ export class InitCommand {
       return;
     }
 
-    const spinner = this.startSpinner('Creating OpenSpec structure...');
+    const spinner = this.startSpinner('Creating flow-studio structure...');
 
     const directories = [
       openspecPath,
@@ -483,7 +483,7 @@ export class InitCommand {
 
     spinner.stopAndPersist({
       symbol: PALETTE.white('▌'),
-      text: PALETTE.white('OpenSpec structure created'),
+      text: PALETTE.white('flow-studio structure created'),
     });
   }
 
@@ -539,7 +539,7 @@ export class InitCommand {
             // Generate SKILL.md content with YAML frontmatter including generatedBy
             // Use hyphen-based command references for tools where filename = command name
             const transformer = (tool.value === 'opencode' || tool.value === 'pi') ? transformToHyphenCommands : undefined;
-            const skillContent = generateSkillContent(template, OPENSPEC_VERSION, transformer);
+            const skillContent = generateSkillContent(template, FLOW_STUDIO_VERSION, transformer);
 
             // Write the skill file
             await FileSystemUtils.writeFile(skillFile, skillContent);
@@ -637,7 +637,7 @@ export class InitCommand {
     configStatus: 'created' | 'exists' | 'skipped'
   ): void {
     console.log();
-    console.log(chalk.bold('OpenSpec Setup Complete'));
+    console.log(chalk.bold('Flow Studio Setup Complete'));
     console.log();
 
     // Show created vs refreshed tools
@@ -685,13 +685,13 @@ export class InitCommand {
 
     // Config status
     if (configStatus === 'created') {
-      console.log(`Config: openspec/config.yaml (schema: ${DEFAULT_SCHEMA})`);
+      console.log(`Config: flow-studio/config.yaml (schema: ${DEFAULT_SCHEMA})`);
     } else if (configStatus === 'exists') {
       // Show actual filename (config.yaml or config.yml)
-      const configYaml = path.join(projectPath, OPENSPEC_DIR_NAME, 'config.yaml');
-      const configYml = path.join(projectPath, OPENSPEC_DIR_NAME, 'config.yml');
+      const configYaml = path.join(projectPath, FLOW_STUDIO_DIR_NAME, 'config.yaml');
+      const configYml = path.join(projectPath, FLOW_STUDIO_DIR_NAME, 'config.yml');
       const configName = fs.existsSync(configYaml) ? 'config.yaml' : fs.existsSync(configYml) ? 'config.yml' : 'config.yaml';
-      console.log(`Config: openspec/${configName} (exists)`);
+      console.log(`Config: flow-studio/${configName} (exists)`);
     } else {
       console.log(chalk.dim(`Config: skipped (non-interactive mode)`));
     }
@@ -703,18 +703,18 @@ export class InitCommand {
     console.log();
     if (activeWorkflows.includes('propose')) {
       console.log(chalk.bold('Getting started:'));
-      console.log('  Start your first change: /opsx:propose "your idea"');
+      console.log('  Start your first change: /fwst:propose "your idea"');
     } else if (activeWorkflows.includes('new')) {
       console.log(chalk.bold('Getting started:'));
-      console.log('  Start your first change: /opsx:new "your idea"');
+      console.log('  Start your first change: /fwst:new "your idea"');
     } else {
-      console.log("Done. Run 'openspec config profile' to configure your workflows.");
+      console.log("Done. Run 'flow-studio config profile' to configure your workflows.");
     }
 
     // Links
     console.log();
-    console.log(`Learn more: ${chalk.cyan('https://github.com/Fission-AI/OpenSpec')}`);
-    console.log(`Feedback:   ${chalk.cyan('https://github.com/Fission-AI/OpenSpec/issues')}`);
+    console.log(`Learn more: ${chalk.cyan('https://github.com/avenga/flow-studio')}`);
+    console.log(`Feedback:   ${chalk.cyan('https://github.com/avenga/flow-studio/issues')}`);
 
     // Restart instruction if any tools were configured
     if (results.createdTools.length > 0 || results.refreshedTools.length > 0) {

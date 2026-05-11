@@ -20,7 +20,7 @@ async function runWorkspaceCommand(args: string[]): Promise<void> {
   const { registerWorkspaceCommand } = await import('../../src/commands/workspace.js');
   const program = new Command();
   registerWorkspaceCommand(program);
-  await program.parseAsync(['node', 'openspec', 'workspace', ...args]);
+  await program.parseAsync(['node', 'flow-studio', 'workspace', ...args]);
 }
 
 async function getPromptMocks(): Promise<{
@@ -59,7 +59,7 @@ describe('workspace command interactive flows', () => {
     process.env = {
       ...process.env,
       XDG_DATA_HOME: dataHome,
-      OPENSPEC_TELEMETRY: '0',
+      FLOW_STUDIO_TELEMETRY: '0',
     };
     delete process.env.CI;
     delete process.env.OPEN_SPEC_INTERACTIVE;

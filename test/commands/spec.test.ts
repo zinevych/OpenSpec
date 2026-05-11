@@ -6,8 +6,8 @@ import { execSync } from 'child_process';
 describe('spec command', () => {
   const projectRoot = process.cwd();
   const testDir = path.join(projectRoot, 'test-spec-command-tmp');
-  const specsDir = path.join(testDir, 'openspec', 'specs');
-  const openspecBin = path.join(projectRoot, 'bin', 'openspec.js');
+  const specsDir = path.join(testDir, 'flow-studio', 'specs');
+  const openspecBin = path.join(projectRoot, 'bin', 'flow-studio.js');
   
   
   beforeEach(async () => {
@@ -84,7 +84,7 @@ The system SHALL process credit card payments securely`;
         expect(json.title).toBe('auth');
         expect(json.overview).toContain('test specification');
         expect(json.requirements).toHaveLength(2);
-        expect(json.metadata.format).toBe('openspec');
+        expect(json.metadata.format).toBe('flow-studio');
       } finally {
         process.chdir(originalCwd);
       }

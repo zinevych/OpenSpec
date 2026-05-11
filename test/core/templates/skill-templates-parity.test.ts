@@ -56,17 +56,17 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'openspec-explore': '08e1ec9958eb04653707dd3e198c3fd69cf1b3acd3cf95a1022693cca83c60fc',
-  'openspec-new-change': 'c324a7ace1f244aa3f534ac8e3370a2c11190d6d1b85a315f26a211398310f0f',
-  'openspec-continue-change': '463cf0b980ec9c3c24774414ef2a3e48e9faa8577bc8748990f45ab3d5efe960',
-  'openspec-apply-change': '38ad2cb645827eda555f20e1ac9d483e1d75bae4c817c0669474aaa8c12c0421',
-  'openspec-ff-change': '672c3a5b8df152d959b15bd7ae2be7a75ab7b8eaa2ec1e0daa15c02479b27937',
-  'openspec-sync-specs': 'b8859cf454379a19ca35dbf59eedca67306607f44a355327f9dc851114e50bde',
-  'openspec-archive-change': 'f83c85452bd47de0dee6b8efbcea6a62534f8a175480e9044f3043f887cebf0f',
-  'openspec-bulk-archive-change': '10477399bb07c7ba67f78e315bd68fb1901af8866720545baf4c62a6a679493b',
-  'openspec-verify-change': 'b6dc1b87940be9d6125b834831c8619019aec9a9748995f72bf981b6f08b67f8',
-  'openspec-onboard': 'c1444e026028210efd699110f7e9079bcb486d85ccf27f743213a81cb1084303',
-  'openspec-propose': '20e36dabefb90e232bad0667292bd5007ec280f8fc4fc995dbc4282bf45a22e7',
+  'flow-studio-explore': '08e1ec9958eb04653707dd3e198c3fd69cf1b3acd3cf95a1022693cca83c60fc',
+  'flow-studio-new-change': 'c324a7ace1f244aa3f534ac8e3370a2c11190d6d1b85a315f26a211398310f0f',
+  'flow-studio-continue-change': '463cf0b980ec9c3c24774414ef2a3e48e9faa8577bc8748990f45ab3d5efe960',
+  'flow-studio-apply-change': '38ad2cb645827eda555f20e1ac9d483e1d75bae4c817c0669474aaa8c12c0421',
+  'flow-studio-ff-change': '672c3a5b8df152d959b15bd7ae2be7a75ab7b8eaa2ec1e0daa15c02479b27937',
+  'flow-studio-sync-specs': 'b8859cf454379a19ca35dbf59eedca67306607f44a355327f9dc851114e50bde',
+  'flow-studio-archive-change': 'f83c85452bd47de0dee6b8efbcea6a62534f8a175480e9044f3043f887cebf0f',
+  'flow-studio-bulk-archive-change': '10477399bb07c7ba67f78e315bd68fb1901af8866720545baf4c62a6a679493b',
+  'flow-studio-verify-change': 'b6dc1b87940be9d6125b834831c8619019aec9a9748995f72bf981b6f08b67f8',
+  'flow-studio-onboard': 'c1444e026028210efd699110f7e9079bcb486d85ccf27f743213a81cb1084303',
+  'flow-studio-propose': '20e36dabefb90e232bad0667292bd5007ec280f8fc4fc995dbc4282bf45a22e7',
 };
 
 function stableStringify(value: unknown): string {
@@ -128,17 +128,17 @@ describe('skill templates split parity', () => {
     // Intentionally excludes getFeedbackSkillTemplate: skillFactories only models templates
     // deployed via generateSkillContent, while feedback is covered in function payload parity.
     const skillFactories: Array<[string, () => SkillTemplate]> = [
-      ['openspec-explore', getExploreSkillTemplate],
-      ['openspec-new-change', getNewChangeSkillTemplate],
-      ['openspec-continue-change', getContinueChangeSkillTemplate],
-      ['openspec-apply-change', getApplyChangeSkillTemplate],
-      ['openspec-ff-change', getFfChangeSkillTemplate],
-      ['openspec-sync-specs', getSyncSpecsSkillTemplate],
-      ['openspec-archive-change', getArchiveChangeSkillTemplate],
-      ['openspec-bulk-archive-change', getBulkArchiveChangeSkillTemplate],
-      ['openspec-verify-change', getVerifyChangeSkillTemplate],
-      ['openspec-onboard', getOnboardSkillTemplate],
-      ['openspec-propose', getOpsxProposeSkillTemplate],
+      ['flow-studio-explore', getExploreSkillTemplate],
+      ['flow-studio-new-change', getNewChangeSkillTemplate],
+      ['flow-studio-continue-change', getContinueChangeSkillTemplate],
+      ['flow-studio-apply-change', getApplyChangeSkillTemplate],
+      ['flow-studio-ff-change', getFfChangeSkillTemplate],
+      ['flow-studio-sync-specs', getSyncSpecsSkillTemplate],
+      ['flow-studio-archive-change', getArchiveChangeSkillTemplate],
+      ['flow-studio-bulk-archive-change', getBulkArchiveChangeSkillTemplate],
+      ['flow-studio-verify-change', getVerifyChangeSkillTemplate],
+      ['flow-studio-onboard', getOnboardSkillTemplate],
+      ['flow-studio-propose', getOpsxProposeSkillTemplate],
     ];
 
     const actualHashes = Object.fromEntries(

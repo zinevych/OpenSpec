@@ -39,7 +39,7 @@ describe('config command integration', () => {
   it('should use XDG_CONFIG_HOME for config path', async () => {
     const { getGlobalConfigPath } = await import('../../src/core/global-config.js');
     const configPath = getGlobalConfigPath();
-    expect(configPath).toBe(path.join(tempDir, 'openspec', 'config.json'));
+    expect(configPath).toBe(path.join(tempDir, 'flow-studio', 'config.json'));
   });
 
   it('should save and load config correctly', async () => {
@@ -97,7 +97,7 @@ describe('config command shell completion registry', () => {
 
     const configCmd = COMMAND_REGISTRY.find((cmd) => cmd.name === 'config');
     expect(configCmd).toBeDefined();
-    expect(configCmd?.description).toBe('View and modify global OpenSpec configuration');
+    expect(configCmd?.description).toBe('View and modify global Flow Studio configuration');
   });
 
   it('should have all config subcommands in registry', async () => {

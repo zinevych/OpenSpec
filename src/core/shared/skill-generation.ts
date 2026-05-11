@@ -55,17 +55,17 @@ export interface CommandTemplateEntry {
  */
 export function getSkillTemplates(workflowFilter?: readonly string[]): SkillTemplateEntry[] {
   const all: SkillTemplateEntry[] = [
-    { template: getExploreSkillTemplate(), dirName: 'openspec-explore', workflowId: 'explore' },
-    { template: getNewChangeSkillTemplate(), dirName: 'openspec-new-change', workflowId: 'new' },
-    { template: getContinueChangeSkillTemplate(), dirName: 'openspec-continue-change', workflowId: 'continue' },
-    { template: getApplyChangeSkillTemplate(), dirName: 'openspec-apply-change', workflowId: 'apply' },
-    { template: getFfChangeSkillTemplate(), dirName: 'openspec-ff-change', workflowId: 'ff' },
-    { template: getSyncSpecsSkillTemplate(), dirName: 'openspec-sync-specs', workflowId: 'sync' },
-    { template: getArchiveChangeSkillTemplate(), dirName: 'openspec-archive-change', workflowId: 'archive' },
-    { template: getBulkArchiveChangeSkillTemplate(), dirName: 'openspec-bulk-archive-change', workflowId: 'bulk-archive' },
-    { template: getVerifyChangeSkillTemplate(), dirName: 'openspec-verify-change', workflowId: 'verify' },
-    { template: getOnboardSkillTemplate(), dirName: 'openspec-onboard', workflowId: 'onboard' },
-    { template: getOpsxProposeSkillTemplate(), dirName: 'openspec-propose', workflowId: 'propose' },
+    { template: getExploreSkillTemplate(), dirName: 'flow-studio-explore', workflowId: 'explore' },
+    { template: getNewChangeSkillTemplate(), dirName: 'flow-studio-new-change', workflowId: 'new' },
+    { template: getContinueChangeSkillTemplate(), dirName: 'flow-studio-continue-change', workflowId: 'continue' },
+    { template: getApplyChangeSkillTemplate(), dirName: 'flow-studio-apply-change', workflowId: 'apply' },
+    { template: getFfChangeSkillTemplate(), dirName: 'flow-studio-ff-change', workflowId: 'ff' },
+    { template: getSyncSpecsSkillTemplate(), dirName: 'flow-studio-sync-specs', workflowId: 'sync' },
+    { template: getArchiveChangeSkillTemplate(), dirName: 'flow-studio-archive-change', workflowId: 'archive' },
+    { template: getBulkArchiveChangeSkillTemplate(), dirName: 'flow-studio-bulk-archive-change', workflowId: 'bulk-archive' },
+    { template: getVerifyChangeSkillTemplate(), dirName: 'flow-studio-verify-change', workflowId: 'verify' },
+    { template: getOnboardSkillTemplate(), dirName: 'flow-studio-onboard', workflowId: 'onboard' },
+    { template: getOpsxProposeSkillTemplate(), dirName: 'flow-studio-propose', workflowId: 'propose' },
   ];
 
   if (!workflowFilter) return all;
@@ -121,7 +121,7 @@ export function getCommandContents(workflowFilter?: readonly string[]): CommandC
  * Generates skill file content with YAML frontmatter.
  *
  * @param template - The skill template
- * @param generatedByVersion - The OpenSpec version to embed in the file
+ * @param generatedByVersion - The Flow Studio version to embed in the file
  * @param transformInstructions - Optional callback to transform the instructions content
  */
 export function generateSkillContent(
@@ -137,9 +137,9 @@ export function generateSkillContent(
 name: ${template.name}
 description: ${template.description}
 license: ${template.license || 'MIT'}
-compatibility: ${template.compatibility || 'Requires openspec CLI.'}
+compatibility: ${template.compatibility || 'Requires flow-studio CLI.'}
 metadata:
-  author: ${template.metadata?.author || 'openspec'}
+  author: ${template.metadata?.author || 'flow-studio'}
   version: "${template.metadata?.version || '1.0'}"
   generatedBy: "${generatedByVersion}"
 ---

@@ -90,7 +90,7 @@ paths: {}
 
   describe('path helpers', () => {
     it('exposes the workspace constants', () => {
-      expect(WORKSPACE_METADATA_DIR_NAME).toBe('.openspec-workspace');
+      expect(WORKSPACE_METADATA_DIR_NAME).toBe('.flow-studio-workspace');
       expect(WORKSPACE_SHARED_STATE_FILE_NAME).toBe('workspace.yaml');
       expect(WORKSPACE_LOCAL_STATE_FILE_NAME).toBe('local.yaml');
       expect(WORKSPACE_CHANGES_DIR_NAME).toBe('changes');
@@ -102,13 +102,13 @@ paths: {}
       const workspaceRoot = path.join(tempDir, 'platform');
 
       expect(getWorkspaceMetadataDir(workspaceRoot)).toBe(
-        path.join(workspaceRoot, '.openspec-workspace')
+        path.join(workspaceRoot, '.flow-studio-workspace')
       );
       expect(getWorkspaceSharedStatePath(workspaceRoot)).toBe(
-        path.join(workspaceRoot, '.openspec-workspace', 'workspace.yaml')
+        path.join(workspaceRoot, '.flow-studio-workspace', 'workspace.yaml')
       );
       expect(getWorkspaceLocalStatePath(workspaceRoot)).toBe(
-        path.join(workspaceRoot, '.openspec-workspace', 'local.yaml')
+        path.join(workspaceRoot, '.flow-studio-workspace', 'local.yaml')
       );
       expect(getWorkspaceChangesDir(workspaceRoot)).toBe(path.join(workspaceRoot, 'changes'));
       expect(getWorkspaceCodeWorkspaceFileName('platform')).toBe('platform.code-workspace');
@@ -121,22 +121,22 @@ paths: {}
       const workspaceRoot = 'D:\\repos\\platform-workspace';
 
       expect(getWorkspaceSharedStatePath(workspaceRoot)).toBe(
-        'D:\\repos\\platform-workspace\\.openspec-workspace\\workspace.yaml'
+        'D:\\repos\\platform-workspace\\.flow-studio-workspace\\workspace.yaml'
       );
       expect(getWorkspaceLocalStatePath(workspaceRoot)).toBe(
-        'D:\\repos\\platform-workspace\\.openspec-workspace\\local.yaml'
+        'D:\\repos\\platform-workspace\\.flow-studio-workspace\\local.yaml'
       );
     });
 
     it('uses getGlobalDataDir for managed workspace and registry locations', () => {
       process.env.XDG_DATA_HOME = tempDir;
 
-      expect(getManagedWorkspacesDir()).toBe(path.join(tempDir, 'openspec', 'workspaces'));
+      expect(getManagedWorkspacesDir()).toBe(path.join(tempDir, 'flow-studio', 'workspaces'));
       expect(getManagedWorkspaceRoot('platform')).toBe(
-        path.join(tempDir, 'openspec', 'workspaces', 'platform')
+        path.join(tempDir, 'flow-studio', 'workspaces', 'platform')
       );
       expect(getWorkspaceRegistryPath()).toBe(
-        path.join(tempDir, 'openspec', 'workspaces', 'registry.yaml')
+        path.join(tempDir, 'flow-studio', 'workspaces', 'registry.yaml')
       );
     });
 
@@ -148,7 +148,7 @@ paths: {}
       });
 
       expect(getManagedWorkspacesDir({ globalDataDir: dataDir })).toBe(
-        '/home/tabish/.local/share/openspec/workspaces'
+        '/home/tabish/.local/share/flow-studio/workspaces'
       );
     });
 
@@ -165,10 +165,10 @@ paths: {}
     });
 
     it('exposes the portable collaboration ignore rule for local state', () => {
-      expect(WORKSPACE_LOCAL_STATE_IGNORE_PATTERN).toBe('.openspec-workspace/local.yaml');
-      expect(getWorkspacePortableIgnorePatterns()).toEqual(['.openspec-workspace/local.yaml']);
+      expect(WORKSPACE_LOCAL_STATE_IGNORE_PATTERN).toBe('.flow-studio-workspace/local.yaml');
+      expect(getWorkspacePortableIgnorePatterns()).toEqual(['.flow-studio-workspace/local.yaml']);
       expect(getWorkspacePortableIgnorePatterns('platform')).toEqual([
-        '.openspec-workspace/local.yaml',
+        '.flow-studio-workspace/local.yaml',
         'platform.code-workspace',
       ]);
     });
@@ -231,19 +231,19 @@ paths: {}
       await expect(findWorkspaceRoot(path.join(notWorkspace, 'changes'))).resolves.toBe(null);
     });
 
-    it('does not mistake repo-local openspec projects for coordination workspaces', async () => {
+    it('does not mistake repo-local flow-studio projects for coordination workspaces', async () => {
       const repoRoot = path.join(tempDir, 'repo');
-      fs.mkdirSync(path.join(repoRoot, 'openspec', 'changes', 'add-feature'), {
+      fs.mkdirSync(path.join(repoRoot, 'flow-studio', 'changes', 'add-feature'), {
         recursive: true,
       });
-      fs.mkdirSync(path.join(repoRoot, 'openspec', 'specs'), { recursive: true });
+      fs.mkdirSync(path.join(repoRoot, 'flow-studio', 'specs'), { recursive: true });
 
-      await expect(findWorkspaceRoot(path.join(repoRoot, 'openspec', 'changes'))).resolves.toBe(
+      await expect(findWorkspaceRoot(path.join(repoRoot, 'flow-studio', 'changes'))).resolves.toBe(
         null
       );
     });
 
-    it('detects a workspace even when a linked path has no repo-local openspec state', async () => {
+    it('detects a workspace even when a linked path has no repo-local flow-studio state', async () => {
       const workspaceRoot = createWorkspaceRoot();
       const linkedPath = path.join(workspaceRoot, 'external-folder');
       fs.mkdirSync(linkedPath, { recursive: true });
@@ -541,7 +541,7 @@ After block.
         },
       ]);
       expect(fs.readFileSync(path.join(workspaceRoot, '.gitignore'), 'utf-8')).toContain(
-        '*.code-workspace\n.openspec-workspace/local.yaml\nplatform.code-workspace\n'
+        '*.code-workspace\n.flow-studio-workspace/local.yaml\nplatform.code-workspace\n'
       );
     });
   });
@@ -601,7 +601,7 @@ workspaces:
     });
 
     it('reads the local registry from the standard registry path', async () => {
-      const globalDataDir = path.join(tempDir, 'data', 'openspec');
+      const globalDataDir = path.join(tempDir, 'data', 'flow-studio');
       const registryPath = getWorkspaceRegistryPath({ globalDataDir });
       fs.mkdirSync(path.dirname(registryPath), { recursive: true });
       fs.writeFileSync(
@@ -621,7 +621,7 @@ workspaces:
     });
 
     it('writes the local registry to the standard registry path', async () => {
-      const globalDataDir = path.join(tempDir, 'data', 'openspec');
+      const globalDataDir = path.join(tempDir, 'data', 'flow-studio');
       const registry = {
         version: 1 as const,
         workspaces: {

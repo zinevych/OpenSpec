@@ -6,14 +6,14 @@ import { MarkdownParser } from './parsers/markdown-parser.js';
 
 export class ViewCommand {
   async execute(targetPath: string = '.'): Promise<void> {
-    const openspecDir = path.join(targetPath, 'openspec');
-    
+    const openspecDir = path.join(targetPath, 'flow-studio');
+
     if (!fs.existsSync(openspecDir)) {
-      console.error(chalk.red('No openspec directory found'));
+      console.error(chalk.red('No flow-studio directory found'));
       process.exit(1);
     }
 
-    console.log(chalk.bold('\nOpenSpec Dashboard\n'));
+    console.log(chalk.bold('\nFlow Studio Dashboard\n'));
     console.log('═'.repeat(60));
 
     // Get changes and specs data
@@ -75,7 +75,7 @@ export class ViewCommand {
     }
 
     console.log('\n' + '═'.repeat(60));
-    console.log(chalk.dim(`\nUse ${chalk.white('openspec list --changes')} or ${chalk.white('openspec list --specs')} for detailed views`));
+    console.log(chalk.dim(`\nUse ${chalk.white('flow-studio list --changes')} or ${chalk.white('flow-studio list --specs')} for detailed views`));
   }
 
   private async getChangesData(openspecDir: string): Promise<{

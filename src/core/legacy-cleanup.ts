@@ -1,5 +1,5 @@
 /**
- * Legacy cleanup module for detecting and removing OpenSpec artifacts
+ * Legacy cleanup module for detecting and removing flow-studio artifacts
  * from previous init versions during the migration to the skill-based workflow.
  */
 
@@ -7,11 +7,11 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import chalk from 'chalk';
 import { FileSystemUtils, removeMarkerBlock as removeMarkerBlockUtil } from '../utils/file-system.js';
-import { OPENSPEC_MARKERS } from './config.js';
+import { FLOW_STUDIO_MARKERS } from './config.js';
 
 /**
  * Legacy config file names from the old ToolRegistry.
- * These were config files created at project root with OpenSpec markers.
+ * These were config files created at project root with flow-studio markers.
  */
 export const LEGACY_CONFIG_FILES = [
   'CLAUDE.md',
@@ -30,7 +30,7 @@ export const LEGACY_CONFIG_FILES = [
  * Some tools used a directory structure, others used individual files.
  */
 export const LEGACY_SLASH_COMMAND_PATHS: Record<string, LegacySlashCommandPattern> = {
-  // Directory-based: .tooldir/commands/openspec/ or .tooldir/commands/openspec/*.md
+  // Directory-based: old openspec/ dirs
   'claude': { type: 'directory', path: '.claude/commands/openspec' },
   'codebuddy': { type: 'directory', path: '.codebuddy/commands/openspec' },
   'qoder': { type: 'directory', path: '.qoder/commands/openspec' },
@@ -39,7 +39,7 @@ export const LEGACY_SLASH_COMMAND_PATHS: Record<string, LegacySlashCommandPatter
   'gemini': { type: 'directory', path: '.gemini/commands/openspec' },
   'costrict': { type: 'directory', path: '.cospec/openspec/commands' },
 
-  // File-based: individual openspec-*.md files in a commands/workflows/prompts folder
+  // File-based: old openspec-* patterns
   'cursor': { type: 'files', pattern: '.cursor/commands/openspec-*.md' },
   'windsurf': { type: 'files', pattern: '.windsurf/workflows/openspec-*.md' },
   'kilocode': { type: 'files', pattern: '.kilocode/workflows/openspec-*.md' },
@@ -72,7 +72,7 @@ export interface LegacySlashCommandPattern {
  * Result of legacy artifact detection
  */
 export interface LegacyDetectionResult {
-  /** Config files with OpenSpec markers detected */
+  /** Config files with flow-studio markers detected */
   configFiles: string[];
   /** Config files to update (remove markers only, never delete) */
   configFilesToUpdate: string[];
@@ -84,14 +84,14 @@ export interface LegacyDetectionResult {
   hasOpenspecAgents: boolean;
   /** Whether openspec/project.md exists (preserved, migration hint only) */
   hasProjectMd: boolean;
-  /** Whether root AGENTS.md has OpenSpec markers */
+  /** Whether root AGENTS.md has flow-studio markers */
   hasRootAgentsWithMarkers: boolean;
   /** Whether any legacy artifacts were found */
   hasLegacyArtifacts: boolean;
 }
 
 /**
- * Detects all legacy OpenSpec artifacts in a project.
+ * Detects all legacy flow-studio artifacts in a project.
  *
  * @param projectPath - The root path of the project
  * @returns Detection result with all found legacy artifacts
@@ -139,7 +139,7 @@ export async function detectLegacyArtifacts(
 }
 
 /**
- * Detects legacy config files with OpenSpec markers.
+ * Detects legacy config files with flow-studio markers.
  * All config files with markers are candidates for update (marker removal only).
  * Config files are NEVER deleted - they belong to the user's project root.
  *
@@ -283,7 +283,7 @@ export async function detectLegacyStructureFiles(
   const projectMdPath = FileSystemUtils.joinPath(projectPath, 'openspec', 'project.md');
   hasProjectMd = await FileSystemUtils.fileExists(projectMdPath);
 
-  // Check for root AGENTS.md with OpenSpec markers
+  // Check for root AGENTS.md with flow-studio markers
   const rootAgentsPath = FileSystemUtils.joinPath(projectPath, 'AGENTS.md');
   if (await FileSystemUtils.fileExists(rootAgentsPath)) {
     const content = await FileSystemUtils.readFile(rootAgentsPath);
@@ -294,14 +294,14 @@ export async function detectLegacyStructureFiles(
 }
 
 /**
- * Checks if content contains OpenSpec markers.
+ * Checks if content contains flow-studio markers.
  *
  * @param content - File content to check
  * @returns True if both start and end markers are present
  */
 export function hasOpenSpecMarkers(content: string): boolean {
   return (
-    content.includes(OPENSPEC_MARKERS.start) && content.includes(OPENSPEC_MARKERS.end)
+    content.includes(FLOW_STUDIO_MARKERS.start) && content.includes(FLOW_STUDIO_MARKERS.end)
   );
 }
 
@@ -312,15 +312,15 @@ export function hasOpenSpecMarkers(content: string): boolean {
  * @returns True if content outside markers is only whitespace
  */
 export function isOnlyOpenSpecContent(content: string): boolean {
-  const startIndex = content.indexOf(OPENSPEC_MARKERS.start);
-  const endIndex = content.indexOf(OPENSPEC_MARKERS.end);
+  const startIndex = content.indexOf(FLOW_STUDIO_MARKERS.start);
+  const endIndex = content.indexOf(FLOW_STUDIO_MARKERS.end);
 
   if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
     return false;
   }
 
   const before = content.substring(0, startIndex);
-  const after = content.substring(endIndex + OPENSPEC_MARKERS.end.length);
+  const after = content.substring(endIndex + FLOW_STUDIO_MARKERS.end.length);
 
   return before.trim() === '' && after.trim() === '';
 }
@@ -330,11 +330,11 @@ export function isOnlyOpenSpecContent(content: string): boolean {
  * Only removes markers that are on their own lines (ignores inline mentions).
  * Cleans up double blank lines that may result from removal.
  *
- * @param content - File content with OpenSpec markers
+ * @param content - File content with flow-studio markers
  * @returns Content with marker block removed
  */
 export function removeMarkerBlock(content: string): string {
-  return removeMarkerBlockUtil(content, OPENSPEC_MARKERS.start, OPENSPEC_MARKERS.end);
+  return removeMarkerBlockUtil(content, FLOW_STUDIO_MARKERS.start, FLOW_STUDIO_MARKERS.end);
 }
 
 /**
@@ -354,7 +354,7 @@ export interface CleanupResult {
 }
 
 /**
- * Cleans up legacy OpenSpec artifacts from a project.
+ * Cleans up legacy flow-studio artifacts from a project.
  * Preserves openspec/project.md (shows migration hint instead of deleting).
  *
  * @param projectPath - The root path of the project
@@ -423,7 +423,7 @@ export async function cleanupLegacyArtifacts(
     }
   }
 
-  // Handle root AGENTS.md with OpenSpec markers - remove markers only, NEVER delete
+  // Handle root AGENTS.md with flow-studio markers - remove markers only, NEVER delete
   // Note: Root AGENTS.md is handled via configFilesToUpdate above (it's in LEGACY_CONFIG_FILES)
   // This hasRootAgentsWithMarkers flag is just for detection, cleanup happens via configFilesToUpdate
 
@@ -447,11 +447,11 @@ export function formatCleanupSummary(result: CleanupResult): string {
     }
 
     for (const dir of result.deletedDirs) {
-      lines.push(`  ✓ Removed ${dir}/ (replaced by /opsx:*)`);
+      lines.push(`  ✓ Removed ${dir}/ (replaced by /fwst:*)`);
     }
 
     for (const file of result.modifiedFiles) {
-      lines.push(`  ✓ Removed OpenSpec markers from ${file}`);
+      lines.push(`  ✓ Removed flow-studio markers from ${file}`);
     }
   }
 
@@ -521,7 +521,7 @@ function buildUpdatesList(detection: LegacyDetectionResult): Array<{ path: strin
 
   // All config files with markers get updated (markers removed, file preserved)
   for (const file of detection.configFilesToUpdate) {
-    updates.push({ path: file, explanation: 'removing OpenSpec markers' });
+    updates.push({ path: file, explanation: 'removing flow-studio markers' });
   }
 
   return updates;
@@ -566,7 +566,7 @@ export function formatDetectionSummary(detection: LegacyDetectionResult): string
   if (updates.length > 0) {
     if (removals.length > 0) lines.push('');
     lines.push(chalk.bold('Files to update'));
-    lines.push(chalk.dim('OpenSpec markers will be removed, your content preserved:'));
+    lines.push(chalk.dim('flow-studio markers will be removed, your content preserved:'));
     for (const { path } of updates) {
       lines.push(`  • ${path}`);
     }

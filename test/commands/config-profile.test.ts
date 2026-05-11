@@ -14,7 +14,7 @@ async function runConfigCommand(args: string[]): Promise<void> {
   const { registerConfigCommand } = await import('../../src/commands/config.js');
   const program = new Command();
   registerConfigCommand(program);
-  await program.parseAsync(['node', 'openspec', 'config', ...args]);
+  await program.parseAsync(['node', 'flow-studio', 'config', ...args]);
 }
 
 async function getPromptMocks(): Promise<{
@@ -83,20 +83,20 @@ describe('config profile interactive flow', () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   function setupDriftedProjectArtifacts(projectDir: string): void {
-    fs.mkdirSync(path.join(projectDir, 'openspec'), { recursive: true });
-    const exploreSkillPath = path.join(projectDir, '.claude', 'skills', 'openspec-explore', 'SKILL.md');
+    fs.mkdirSync(path.join(projectDir, 'flow-studio'), { recursive: true });
+    const exploreSkillPath = path.join(projectDir, '.claude', 'skills', 'flow-studio-explore', 'SKILL.md');
     fs.mkdirSync(path.dirname(exploreSkillPath), { recursive: true });
-    fs.writeFileSync(exploreSkillPath, 'name: openspec-explore\n', 'utf-8');
+    fs.writeFileSync(exploreSkillPath, 'name: flow-studio-explore\n', 'utf-8');
   }
 
   function setupSyncedCoreBothArtifacts(projectDir: string): void {
-    fs.mkdirSync(path.join(projectDir, 'openspec'), { recursive: true });
+    fs.mkdirSync(path.join(projectDir, 'flow-studio'), { recursive: true });
     const coreSkillDirs = [
-      'openspec-propose',
-      'openspec-explore',
-      'openspec-apply-change',
-      'openspec-sync-specs',
-      'openspec-archive-change',
+      'flow-studio-propose',
+      'flow-studio-explore',
+      'flow-studio-apply-change',
+      'flow-studio-sync-specs',
+      'flow-studio-archive-change',
     ];
     for (const dirName of coreSkillDirs) {
       const skillPath = path.join(projectDir, '.claude', 'skills', dirName, 'SKILL.md');
@@ -106,18 +106,18 @@ describe('config profile interactive flow', () => {
 
     const coreCommands = ['propose', 'explore', 'apply', 'sync', 'archive'];
     for (const commandId of coreCommands) {
-      const commandPath = path.join(projectDir, '.claude', 'commands', 'opsx', `${commandId}.md`);
+      const commandPath = path.join(projectDir, '.claude', 'commands', 'fwst', `${commandId}.md`);
       fs.mkdirSync(path.dirname(commandPath), { recursive: true });
       fs.writeFileSync(commandPath, `# ${commandId}\n`, 'utf-8');
     }
   }
 
   function addExtraVerifyWorkflowArtifacts(projectDir: string): void {
-    const verifySkillPath = path.join(projectDir, '.claude', 'skills', 'openspec-verify-change', 'SKILL.md');
+    const verifySkillPath = path.join(projectDir, '.claude', 'skills', 'flow-studio-verify-change', 'SKILL.md');
     fs.mkdirSync(path.dirname(verifySkillPath), { recursive: true });
-    fs.writeFileSync(verifySkillPath, 'name: openspec-verify-change\n', 'utf-8');
+    fs.writeFileSync(verifySkillPath, 'name: flow-studio-verify-change\n', 'utf-8');
 
-    const verifyCommandPath = path.join(projectDir, '.claude', 'commands', 'opsx', 'verify.md');
+    const verifyCommandPath = path.join(projectDir, '.claude', 'commands', 'fwst', 'verify.md');
     fs.mkdirSync(path.dirname(verifyCommandPath), { recursive: true });
     fs.writeFileSync(verifyCommandPath, '# verify\n', 'utf-8');
   }
@@ -275,7 +275,7 @@ describe('config profile interactive flow', () => {
     const configPath = getGlobalConfigPath();
     const beforeContent = fs.readFileSync(configPath, 'utf-8');
 
-    fs.mkdirSync(path.join(tempDir, 'openspec'), { recursive: true });
+    fs.mkdirSync(path.join(tempDir, 'flow-studio'), { recursive: true });
     select.mockResolvedValueOnce('delivery');
     select.mockResolvedValueOnce('both');
 
@@ -351,7 +351,7 @@ describe('config profile interactive flow', () => {
     const { select, confirm } = await getPromptMocks();
 
     saveGlobalConfig({ featureFlags: {}, profile: 'core', delivery: 'both', workflows: ['propose', 'explore', 'apply', 'sync', 'archive'] });
-    fs.mkdirSync(path.join(tempDir, 'openspec'), { recursive: true });
+    fs.mkdirSync(path.join(tempDir, 'flow-studio'), { recursive: true });
 
     select.mockResolvedValueOnce('delivery');
     select.mockResolvedValueOnce('skills');
